@@ -1,0 +1,24 @@
+{
+  "originHash" : "3167ab2ba14afe6c5471ea47dca8a45635ce608c46ac47559520d63c35d027ce",
+  "pins" : [
+    {
+      "identity" : "audiokit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AudioKit/AudioKit.git",
+      "state" : {
+        "revision" : "b2dbaed8cd38077092b6b6e311699ddf5d94dbd7",
+        "version" : "5.6.3"
+      }
+    },
+    {
+      "identity" : "resizablevector",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Matt54/ResizableVector.git",
+      "state" : {
+        "revision" : "7f223f16efed3035b9bf476ebfb575f67804538d",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -1,21 +1,25 @@
 // swift-tools-version: 5.10
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "SwiftMetronome",
+    platforms: [.visionOS(.v1)],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "SwiftMetronome",
             targets: ["SwiftMetronome"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/AudioKit/AudioKit.git", from: "5.0.0"),
+        .package(url: "https://github.com/Matt54/ResizableVector.git", from: "1.0.0")
+    ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "SwiftMetronome"),
+            name: "SwiftMetronome",
+            dependencies: ["AudioKit", "ResizableVector"],
+            resources: [.process("Resources")]
+        ),
         .testTarget(
             name: "SwiftMetronomeTests",
             dependencies: ["SwiftMetronome"]),
