@@ -8,10 +8,10 @@
 import SwiftUI
 
 public struct MetronomeRootView: View {
-    @State var metronome = MetronomeConductor()
+    @State var metronome: MetronomeConductor
     var openMainMenuAction: (()->Void)? = nil
     
-    public init(metronome: MetronomeConductor = MetronomeConductor(),
+    public init(metronome: MetronomeConductor,
                 openMainMenuAction: (()->Void)? = nil) {
         self.metronome = metronome
         self.openMainMenuAction = openMainMenuAction
@@ -34,7 +34,7 @@ public struct MetronomeRootView: View {
                 MetronomeSettingsView(soundtype: $metronome.soundType,
                                       openMainMenuAction: openMainMenuAction)
             } else {
-                MetronomeView()
+                MetronomeView(metronome: metronome)
             }
         }
         .frame(minWidth: 300, maxWidth: 300, minHeight: 300, maxHeight: 300)
@@ -67,5 +67,5 @@ public struct MetronomeRootView: View {
 }
 
 #Preview("MetronomeRootView", windowStyle: .automatic, traits: .fixedLayout(width: 300, height: 300)) {
-    MetronomeRootView()
+    MetronomeRootView(metronome: MetronomeConductor())
 }

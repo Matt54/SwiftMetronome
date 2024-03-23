@@ -8,9 +8,9 @@
 import SwiftUI
 
 public struct MetronomeView: View {
-    @State var metronome = MetronomeConductor()
+    @State var metronome: MetronomeConductor
     
-    public init(metronome: MetronomeConductor = MetronomeConductor()) {
+    public init(metronome: MetronomeConductor) {
         self.metronome = metronome
     }
     
@@ -133,5 +133,5 @@ public struct MetronomeView: View {
 }
 
 #Preview("Metronome", windowStyle: .automatic, traits: .fixedLayout(width: 300, height: 300)) {
-    MetronomeView()
+    MetronomeView(metronome: MetronomeConductor())
 }
