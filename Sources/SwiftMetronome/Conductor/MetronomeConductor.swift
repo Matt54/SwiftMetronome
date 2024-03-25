@@ -23,7 +23,6 @@ public class MetronomeConductor {
     private var outputMixer: Mixer = Mixer()
     private var primaryHitSampler = AppleSampler()
     private var secondaryHitSampler = AppleSampler()
-    private var wasRunning: Bool = false // keeps track of play state during audio interruption
     
     public init(Logger: LogsMetronomeEvents.Type? = nil)  {
         self.Logger = Logger
@@ -38,15 +37,30 @@ public class MetronomeConductor {
 
 // MARK: Public Methods
 public extension MetronomeConductor {
-    func start() {
+    /// Starts and then stops the audio engine - I call this on app launch and it seems to prepare the system for playback. I was getting a nasty sound when playback started for the first time otherwise.
+    func warmupEngine() {
+        do {
+            try engine.start()
+            engine.stop()
+            Logger?.log(MetronomeEvent.audioEngineWarmup.rawValue,
+                        additionalContext: ["object": "Metronome"])
+        } catch {
+            Logger?.log(MetronomeEvent.audioEngineWarmupError.rawValue,
+                        additionalContext: ["object": "Metronome",
+                                            "error" : String(describing: error)])
+            errorMessage = error.localizedDescription
+        }
+    }
+    
+    func resume() {
         do {
             // the samplers wipe the audio files when the engine stops, so load them back each time
             try loadAudioSamplesForSoundType(soundType)
             try engine.start()
             engineIsRunning = true
-            clock.resume()
             Logger?.log(MetronomeEvent.audioEngineStarted.rawValue,
                         additionalContext: ["object": "Metronome"])
+            clock.resume()
         } catch {
             Logger?.log(MetronomeEvent.audioEngineStartError.rawValue,
                         additionalContext: ["object": "Metronome",
@@ -161,7 +175,6 @@ extension MetronomeConductor {
         
 
         if type == .began {
-            wasRunning = engineIsRunning
             pause()
         } else if type == .ended {
             do {
@@ -170,10 +183,6 @@ extension MetronomeConductor {
                 stringKeyedUserInfo.merge(["error": String(describing: error)]) { (current, _) in current }
                 Logger?.log(MetronomeEvent.audioSessionSetActiveFailed.rawValue,
                             additionalContext: stringKeyedUserInfo)
-            }
-            
-            if wasRunning {
-                pause()
             }
         }
     }

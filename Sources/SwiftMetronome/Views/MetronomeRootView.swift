@@ -47,7 +47,7 @@ public struct MetronomeRootView: View {
             Button("Play and Pause", systemImage: metronome.clock.isRunning ? "pause.fill" : "play.fill") {
                 print("isRunning value: \(metronome.clock.isRunning)")
                 if !metronome.clock.isRunning {
-                    metronome.start()
+                    metronome.resume()
                 } else {
                     metronome.pause()
                 }

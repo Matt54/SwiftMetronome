@@ -18,53 +18,19 @@ public struct MetronomeView: View {
         ZStack {
             VStack {
                 HStack {
-                    Menu {
-                        ForEach(TimeSignature.allCases, id: \.self) { timeSignature in
-                            Button(action: {
-                                metronome.clock.timeSignature = timeSignature
-                            }) {
-                                Text(timeSignature.menuTextHacked)
-                            }
-                        }
-                    } label: {
-                        Text(metronome.clock.timeSignature.fractionText)
-                            .frame(width: 45, height: 25)
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.leading)
-                    .padding(.top, 15)
+                    TimeSignatureMenu(timeSignature: $metronome.clock.timeSignature)
+                        .padding(.leading)
+                        .padding(.top, 15)
+                    
                     Spacer()
                     
-                    Menu {
-                        ForEach(Subdivision.allCases, id: \.self) { subdivision in
-                            Button(action: {
-                                metronome.clock.subdivision = subdivision
-                            }) {
-                                Label {
-                                    Text(subdivision.getNameForTimeSignature(metronome.clock.timeSignature))
-                                } icon: {
-                                    Image(subdivision.getImageForTimeSignature(metronome.clock.timeSignature), bundle: .module)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(height: 20)
-                                }
-                            }
-                        }
-                    } label: {
-                        Image(metronome.clock.subdivision.getImageForTimeSignature(metronome.clock.timeSignature), bundle: .module)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 38, height: 16)
-                            .padding(4)
-                    }
-                    .padding(.trailing)
-                    .padding(.top, 15)
-                    .buttonStyle(.plain)
+                    SubdivisionMenu(subdivision: $metronome.clock.subdivision, timeSignature: metronome.clock.timeSignature)
+                        .padding(.trailing)
+                        .padding(.top, 15)
                 }
                 
                 Spacer()
             }
-            
             .foregroundStyle(.secondary)
             
             ArcKnobView(tempo: $metronome.clock.tempoBPM)
@@ -75,6 +41,57 @@ public struct MetronomeView: View {
                                            numberOfBeats: metronome.clock.timeSignature.numerator)
         }
         .padding(.vertical)
+    }
+    
+    struct TimeSignatureMenu: View {
+        @Binding var timeSignature: TimeSignature
+
+        var body: some View {
+            Menu {
+                ForEach(TimeSignature.allCases, id: \.self) { timeSignature in
+                    Button(action: {
+                        self.timeSignature = timeSignature
+                    }) {
+                        Text(timeSignature.menuTextHacked)
+                    }
+                }
+            } label: {
+                Text(timeSignature.fractionText)
+                    .frame(width: 45, height: 25)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+    
+    struct SubdivisionMenu: View {
+        @Binding var subdivision: Subdivision
+        let timeSignature: TimeSignature
+        
+        var body: some View {
+            Menu {
+                ForEach(Subdivision.allCases, id: \.self) { subdivision in
+                    Button(action: {
+                        self.subdivision = subdivision
+                    }) {
+                        Label {
+                            Text(subdivision.getNameForTimeSignature(timeSignature))
+                        } icon: {
+                            Image(subdivision.getImageForTimeSignature(timeSignature), bundle: .module)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 20)
+                        }
+                    }
+                }
+            } label: {
+                Image(subdivision.getImageForTimeSignature(timeSignature), bundle: .module)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 38, height: 16)
+                    .padding(4)
+            }
+            .buttonStyle(.plain)
+        }
     }
     
     struct CurrentBeatIndicatorCircleGrid: View {
