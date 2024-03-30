@@ -114,7 +114,7 @@ public struct MetronomeView: View {
                                 if isRunning && index == currentBeat {
                                     Circle()
                                         .fill(.red)
-                                        .padding(index == 0 ? 1 : 4)
+                                        .padding(index == 0 ? 1 : 2)
                                 }
                             }
                             .frame(height: numberOfBeats > 6 ? 12 : 15)
@@ -135,7 +135,7 @@ public struct MetronomeView: View {
                                     if isRunning && index == currentBeat {
                                         Circle()
                                             .fill(.red)
-                                            .padding(index == 0 ? 1 : 4)
+                                            .padding(index == 0 ? 1 : 2)
                                     }
                                 }
                                 .frame(height: 12)
