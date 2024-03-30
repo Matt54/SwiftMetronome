@@ -27,11 +27,13 @@ public class MetronomeConductor {
     public init(Logger: LogsMetronomeEvents.Type? = nil)  {
         self.Logger = Logger
         engine = AudioEngine()
+        #if !targetEnvironment(simulator)
         setupAudioChain()
         configureAudioSession()
         outputMixer.volume = 1.5 // a little gain to make up for quiet sounds
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleAudioSessionInterruption), name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
+        #endif
     }
 }
 
