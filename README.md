@@ -1,4 +1,10 @@
-# SwiftMetronome
+# [SwiftMetronome](https://apps.apple.com/us/app/spatial-tuner-pitch-tuning/id6478814592)
+
+<p align="center">
+<kbd>
+    <img src="MediaFiles/HeaderVideo.gif" width="600">
+</kbd>
+</p>
 
 This open source Swift Package aims to create a great metronome experience on visionOS.
 
