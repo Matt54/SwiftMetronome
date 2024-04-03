@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 public struct MetronomeView: View {
     @State var metronome: MetronomeConductor
@@ -13,6 +14,8 @@ public struct MetronomeView: View {
     public init(metronome: MetronomeConductor) {
         self.metronome = metronome
     }
+    
+    private var knobTip = KnobTip()
     
     public var body: some View {
         ZStack {
@@ -35,6 +38,9 @@ public struct MetronomeView: View {
             
             ArcKnobView(tempo: $metronome.clock.tempoBPM)
                 .frame(width: 225, height: 225)
+            
+            TipView(knobTip, arrowEdge: .bottom)
+                .offset(y: -90)
             
             CurrentBeatIndicatorCircleGrid(isRunning: metronome.clock.isRunning,
                                            currentBeat: metronome.clock.currentBeat,
@@ -145,6 +151,20 @@ public struct MetronomeView: View {
                     Spacer()
                 }
             }
+        }
+    }
+    
+    struct KnobTip: Tip {
+        var title: Text {
+            Text("Adjust Tempo")
+        }
+        
+        var message: Text? {
+            Text("Pinch and drag the knob to adjust the tempo of the metronome.")
+        }
+        
+        var image: Image? {
+            Image(systemName: "dial.medium")
         }
     }
 }
