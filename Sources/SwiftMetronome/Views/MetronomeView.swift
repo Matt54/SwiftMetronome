@@ -162,10 +162,6 @@ public struct MetronomeView: View {
         var message: Text? {
             Text("Pinch and drag the knob to adjust the tempo of the metronome.")
         }
-        
-        var image: Image? {
-            Image(systemName: "dial.medium")
-        }
     }
 }
 
