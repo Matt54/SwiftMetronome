@@ -9,21 +9,20 @@ import MediaPlayer
 import SwiftUI
 
 struct MetronomeSettingsView: View {
-    @Binding var soundtype: MetronomeSound
-    var openMainMenuAction: (()->Void)? = nil
-    
+    @Binding var soundType: MetronomeSound
+
     var body: some View {
         VStack(spacing: 0) {
-            Text("Settings")
-                .font(.title)
+            Text("Metronome Settings")
+                .font(.title3)
                 .frame(maxWidth: .infinity)
             
+            Spacer()
             Spacer()
             
             HStack {
                 Text("Sound: ")
-                Spacer(minLength: 0)
-                Picker("Select Sound", selection: $soundtype) {
+                Picker("Select Sound", selection: $soundType) {
                     ForEach(MetronomeSound.sortedByName, id: \.self) { soundType in
                         Text(soundType.name)
                             .tag(soundType)
@@ -33,27 +32,16 @@ struct MetronomeSettingsView: View {
             }
             .padding(.bottom, 30)
             
-            HStack {
-                Text("Volume: ")
+            Spacer()
+            
+            VStack {
+                Text("System Volume: ")
                 VolumeSliderWithPreviewCompatibility()
             }
             
             Spacer()
-            
-            Spacer()
-            
-            Button {
-                openMainMenuAction?()
-            } label: {
-                HStack {
-                    Image(systemName: "house")
-                    Text("Open Main Menu")
-                }
-            }
-            .disabled(openMainMenuAction == nil)
-            .frame(maxWidth: .infinity)
         }
-        .padding(.vertical)
+        .padding()
         .padding()
     }
     
@@ -78,6 +66,6 @@ struct MetronomeSettingsView: View {
 
 #Preview(windowStyle: .automatic, traits: .fixedLayout(width: 300, height: 300)) {
     StatefulPreviewWrapper(MetronomeSound.defaultClick) { value in
-        MetronomeSettingsView(soundtype: value)
+        MetronomeSettingsView(soundType: value)
     }
 }

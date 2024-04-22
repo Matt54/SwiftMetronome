@@ -9,12 +9,9 @@ import SwiftUI
 
 public struct MetronomeRootView: View {
     @State var metronome: MetronomeConductor
-    var openMainMenuAction: (()->Void)? = nil
     
-    public init(metronome: MetronomeConductor,
-                openMainMenuAction: (()->Void)? = nil) {
+    public init(metronome: MetronomeConductor) {
         self.metronome = metronome
-        self.openMainMenuAction = openMainMenuAction
     }
     
     @State private var isShowingSettings = false
@@ -31,8 +28,7 @@ public struct MetronomeRootView: View {
         
         Group {
             if isShowingSettings {
-                MetronomeSettingsView(soundtype: $metronome.soundType,
-                                      openMainMenuAction: openMainMenuAction)
+                MetronomeSettingsView(soundType: $metronome.soundType)
             } else {
                 MetronomeView(metronome: metronome)
             }
