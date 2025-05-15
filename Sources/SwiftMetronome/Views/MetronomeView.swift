@@ -10,9 +10,11 @@ import TipKit
 
 public struct MetronomeView: View {
     @State var metronome: MetronomeConductor
+    let isTempoLocked: Bool
     
-    public init(metronome: MetronomeConductor) {
+    public init(metronome: MetronomeConductor, isTempoLocked: Bool) {
         self.metronome = metronome
+        self.isTempoLocked = isTempoLocked
     }
     
     private var knobTip = KnobTip()
@@ -31,13 +33,17 @@ public struct MetronomeView: View {
                         .padding(.trailing)
                         .padding(.top, 15)
                 }
+                .padding(.top, 8)
+                .disabled(isTempoLocked)
                 
                 Spacer()
             }
             .foregroundStyle(.secondary)
             
             ArcKnobView(tempo: $metronome.clock.tempoBPM)
-                .frame(width: 225, height: 225)
+                .frame(width: 215, height: 215)
+                .brightness(isTempoLocked ? -0.1 : 0)
+                .disabled(isTempoLocked)
             
             TipView(knobTip, arrowEdge: .bottom)
                 .offset(y: -90)
@@ -105,6 +111,9 @@ public struct MetronomeView: View {
         let currentBeat: Int
         let numberOfBeats: Int
         
+        let circlePaddingOn1: CGFloat = 2
+        let circlePaddingOnOthers: CGFloat = 3
+        
         var body: some View {
             VStack {
                 Spacer()
@@ -120,7 +129,7 @@ public struct MetronomeView: View {
                                 if isRunning && index == currentBeat {
                                     Circle()
                                         .fill(.red)
-                                        .padding(index == 0 ? 1 : 2)
+                                        .padding(index == 0 ? circlePaddingOn1 : circlePaddingOnOthers)
                                 }
                             }
                             .frame(height: numberOfBeats > 6 ? 12 : 15)
@@ -141,7 +150,7 @@ public struct MetronomeView: View {
                                     if isRunning && index == currentBeat {
                                         Circle()
                                             .fill(.red)
-                                            .padding(index == 0 ? 1 : 2)
+                                            .padding(index == 0 ? circlePaddingOn1 : circlePaddingOnOthers)
                                     }
                                 }
                                 .frame(height: 12)
@@ -166,5 +175,5 @@ public struct MetronomeView: View {
 }
 
 #Preview("Metronome", windowStyle: .automatic, traits: .fixedLayout(width: 300, height: 300)) {
-    MetronomeView(metronome: MetronomeConductor())
+    MetronomeView(metronome: MetronomeConductor(), isTempoLocked: false)
 }

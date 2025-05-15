@@ -28,9 +28,9 @@ public struct MetronomeRootView: View {
         
         Group {
             if isShowingSettings {
-                MetronomeSettingsView(soundType: $metronome.soundType)
+                MetronomeSettingsView(soundType: $metronome.soundType, boostType: $metronome.boostType)
             } else {
-                MetronomeView(metronome: metronome)
+                MetronomeView(metronome: metronome, isTempoLocked: false)
             }
         }
         .frame(minWidth: 300, maxWidth: 300, minHeight: 300, maxHeight: 300)

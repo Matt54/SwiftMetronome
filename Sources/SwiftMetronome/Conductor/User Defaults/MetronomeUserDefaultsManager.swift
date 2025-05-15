@@ -10,6 +10,7 @@ import Foundation
 class MetronomeUserDefaultsManager {
     enum UserDefaultKey: String {
         case soundType = "kSoundType"
+        case boostType = "kBoostType"
     }
     
     static func getMetronomeSoundType() -> MetronomeSound {
@@ -20,6 +21,18 @@ class MetronomeUserDefaultsManager {
     }
     
     static func setMetronomeSoundType(_ value: MetronomeSound) {
-        UserDefaults.standard.set(Int(value.rawValue), forKey: UserDefaultKey.soundType.rawValue)
+        UserDefaults.standard.set(value.rawValue, forKey: UserDefaultKey.soundType.rawValue)
+        
+    }
+    
+    static func getMetronomeBoostType() -> BoostType {
+        let key = UserDefaultKey.boostType.rawValue
+        let value = UserDefaults.standard.string(forKey: key)
+        let boostType = BoostType(rawValue: value ?? "")
+        return boostType ?? .normal
+    }
+    
+    static func setMetronomeBoostType(_ value: BoostType) {
+        UserDefaults.standard.set(value.rawValue, forKey: UserDefaultKey.boostType.rawValue)
     }
 }

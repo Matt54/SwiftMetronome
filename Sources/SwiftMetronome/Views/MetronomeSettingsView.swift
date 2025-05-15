@@ -8,38 +8,109 @@
 import MediaPlayer
 import SwiftUI
 
-struct MetronomeSettingsView: View {
+public struct MetronomeSettingsView: View {
     @Binding var soundType: MetronomeSound
+    @Binding private var boostType: BoostType
+    
+    public init(soundType: Binding<MetronomeSound>, boostType: Binding<BoostType>) {
+        self._soundType = soundType
+        self._boostType = boostType
+    }
+    
+    var infoCircle: some View {
+        Image(systemName: "info.circle")
+            .foregroundStyle(.secondary)
+    }
+    
+    @State private var showingSoundInfo: Bool = false
+    @State private var showingBoostInfo: Bool = false
+    @State private var showingVolumeInfo: Bool = false
 
-    var body: some View {
-        VStack(spacing: 0) {
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
             Text("Metronome Settings")
                 .font(.title3)
                 .frame(maxWidth: .infinity)
             
-            Spacer()
-            Spacer()
-            
             HStack {
-                Text("Sound: ")
+                Button {
+                    showingSoundInfo = true
+                } label: {
+                    infoCircle
+                }
+                .buttonStyle(.plain)
+                .buttonBorderShape(.circle)
+                .popover(
+                    isPresented: $showingSoundInfo, arrowEdge: .bottom
+                ) {
+                    Text(String.soundInfo)
+                        .frame(width: 300)
+                        .padding()
+                }
+                
+                Text("Click:")
+                Spacer(minLength: 10)
                 Picker("Select Sound", selection: $soundType) {
-                    ForEach(MetronomeSound.sortedByName, id: \.self) { soundType in
-                        Text(soundType.name)
-                            .tag(soundType)
+                    ForEach(MetronomeSound.sortedByName, id: \.self) { type in
+                        Text(type.name)
+                            .tag(type)
                     }
                 }
-                Spacer(minLength: 0)
             }
-            .padding(.bottom, 30)
             
-            Spacer()
+            HStack {
+                Button {
+                    showingBoostInfo = true
+                } label: {
+                    infoCircle
+                }
+                .buttonStyle(.plain)
+                .buttonBorderShape(.circle)
+                .popover(
+                    isPresented: $showingBoostInfo, arrowEdge: .bottom
+                ) {
+                    Text(String.boostInfo)
+                        .frame(width: 300)
+                        .padding()
+                }
+                
+                Text("Boost:")
+                Spacer(minLength: 10)
+                Picker("Select Boost", selection: $boostType) {
+                    ForEach(BoostType.allCases, id: \.self) { boost in
+                        Text(boost.name)
+                            .tag(boost)
+                    }
+                }
+            }
+            .padding(.bottom, 10)
             
-            VStack {
-                Text("System Volume: ")
+            VStack(spacing: 18) {
+                ZStack {
+                    HStack {
+                        Button {
+                            showingVolumeInfo = true
+                        } label: {
+                            infoCircle
+                        }
+                        .buttonStyle(.plain)
+                        .buttonBorderShape(.circle)
+                        .popover(
+                            isPresented: $showingVolumeInfo, arrowEdge: .bottom
+                        ) {
+                            Text(String.systemVolumeInfo)
+                                .frame(width: 300)
+                                .padding()
+                        }
+                        Spacer()
+                    }
+                    Text("System Volume:")
+                }
+                
                 VolumeSliderWithPreviewCompatibility()
             }
             
-            Spacer()
+            Spacer(minLength: 0)
         }
         .padding()
         .padding()
@@ -66,6 +137,22 @@ struct MetronomeSettingsView: View {
 
 #Preview(windowStyle: .automatic, traits: .fixedLayout(width: 300, height: 300)) {
     StatefulPreviewWrapper(MetronomeSound.defaultClick) { value in
-        MetronomeSettingsView(soundType: value)
+        StatefulPreviewWrapper(BoostType.normal) { boost in
+            MetronomeSettingsView(soundType: value, boostType: boost)
+        }
+    }
+}
+
+extension String {
+    static var soundInfo: String {
+        "The sound that the metronome makes."
+    }
+    
+    static var boostInfo: String {
+        "Changes click loudness without affecting the overall system volume."
+    }
+    
+    static var systemVolumeInfo: String {
+        "Adjusts Vision Pro system volume."
     }
 }

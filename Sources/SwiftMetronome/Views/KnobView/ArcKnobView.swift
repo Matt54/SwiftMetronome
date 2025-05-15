@@ -26,6 +26,10 @@ struct ArcKnobView: View {
             }
         )
     }
+    
+    var color: Color {
+        return Color.progressGradientColor(from: tempo, in: bounds)
+    }
 
     var body: some View {
         GeometryReader { geo in
@@ -53,7 +57,7 @@ struct ArcKnobView: View {
                                 endAngle: endAngle,
                                 clockwise: false)
                 }
-                .stroke(Color.progressGradientColor(from: tempo, in: bounds), style: .init(lineWidth: lineWidth, lineCap: .round))
+                .stroke(color, style: .init(lineWidth: lineWidth, lineCap: .round))
                 .rotationEffect(Angle(degrees: 135))
                 
                 // static background layer
@@ -69,8 +73,8 @@ struct ArcKnobView: View {
                 .allowsHitTesting(false)
 
                 KnobView(value: tempoBinding,
-                              bounds: bounds,
-                              sensitivity: sensitivity)
+                         bounds: bounds,
+                         sensitivity: sensitivity)
                     .frame(width: minorDimension - lineWidth*1.4)
             }
             .frame(width: geo.size.width, height: geo.size.height)
@@ -85,7 +89,7 @@ struct ArcKnobView: View {
     .frame(width: 225, height: 225)
 }
 
-fileprivate extension Color {
+public extension Color {
     static func progressGradientColor(from value: Double, in range: ClosedRange<CGFloat> = 0...1) -> Color {
         let normalizedValue = (value - range.lowerBound) / (range.upperBound - range.lowerBound)
         let greenComponent: Double

@@ -12,11 +12,15 @@ import AVFoundation
 @Observable
 public class MetronomeConductor {
     public var clock = TickCountingTimer()
-    public var soundType = MetronomeUserDefaultsManager.getMetronomeSoundType() {
+    public var soundType: MetronomeSound = MetronomeUserDefaultsManager.getMetronomeSoundType() {
         didSet { setSoundType(soundType) }
+    }
+    public var boostType: BoostType = MetronomeUserDefaultsManager.getMetronomeBoostType() {
+        didSet { setBoostType(boostType) }
     }
     public var errorMessage: String? = nil
     public var Logger: LogsMetronomeEvents.Type? // logger / analytics capturing class
+    public var instanceCount: Int = 0
     
     private var engineIsRunning: Bool = false
     private var engine: AudioEngine
@@ -30,7 +34,7 @@ public class MetronomeConductor {
         #if !targetEnvironment(simulator)
         setupAudioChain()
         configureAudioSession()
-        outputMixer.volume = 1.5 // a little gain to make up for quiet sounds
+        outputMixer.volume = boostType.mixerOutputVolume
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleAudioSessionInterruption), name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
         #endif
@@ -94,6 +98,11 @@ public extension MetronomeConductor {
                                             "error": String(describing: error)])
             errorMessage = error.localizedDescription
         }
+    }
+    
+    func setBoostType(_ boostType: BoostType) {
+        outputMixer.volume = boostType.mixerOutputVolume
+        MetronomeUserDefaultsManager.setMetronomeBoostType(boostType)
     }
 }
 
@@ -193,4 +202,33 @@ extension MetronomeConductor {
 // MARK: MetronomeError
 enum MetronomeError: Error {
     case primarySoundMissing, secondarySoundMissing
+}
+
+// MARK: BoostType
+public enum BoostType: String, CaseIterable {
+    case quiet
+    case normal
+    case loud
+    
+    var name: String {
+        switch self {
+        case .quiet:
+            "Quiet"
+        case .normal:
+            "Normal"
+        case .loud:
+            "Loud"
+        }
+    }
+    
+    var mixerOutputVolume: Float {
+        switch self {
+        case .quiet:
+            return 0.75
+        case .normal:
+            return 1.5
+        case .loud:
+            return 2.25
+        }
+    }
 }
