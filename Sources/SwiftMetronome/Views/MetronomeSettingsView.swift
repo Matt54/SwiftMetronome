@@ -55,7 +55,7 @@ public struct MetronomeSettingsView: View {
                         Text(type.name)
                             .tag(type)
                     }                }
-                .frame(width: 160)
+                .frame(width: 145)
             }
             
             HStack {
@@ -82,7 +82,7 @@ public struct MetronomeSettingsView: View {
                             .tag(boost)
                     }
                 }
-                .frame(width: 160)
+                .frame(width: 145)
             }
             .padding(.bottom, 10)
             
@@ -105,7 +105,7 @@ public struct MetronomeSettingsView: View {
                         }
                         Spacer()
                     }
-                    Text("System Volume:")
+                    Text("System Volume")
                 }
                 
                 VolumeSliderWithPreviewCompatibility()
@@ -140,6 +140,7 @@ public struct MetronomeSettingsView: View {
     StatefulPreviewWrapper(MetronomeSound.defaultClick) { value in
         StatefulPreviewWrapper(BoostType.normal) { boost in
             MetronomeSettingsView(soundType: value, boostType: boost)
+                .frame(width: 300)
         }
     }
 }
