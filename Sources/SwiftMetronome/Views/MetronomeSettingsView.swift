@@ -54,8 +54,8 @@ public struct MetronomeSettingsView: View {
                     ForEach(MetronomeSound.sortedByName, id: \.self) { type in
                         Text(type.name)
                             .tag(type)
-                    }
-                }
+                    }                }
+                .frame(width: 160)
             }
             
             HStack {
@@ -82,6 +82,7 @@ public struct MetronomeSettingsView: View {
                             .tag(boost)
                     }
                 }
+                .frame(width: 160)
             }
             .padding(.bottom, 10)
             

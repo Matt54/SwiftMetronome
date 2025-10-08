@@ -85,7 +85,7 @@ struct KnobView: View {
                         .buttonBorderShape(.circle)
                         .hoverEffect(.lift)
                     }
-                        .padding()
+                    .padding(14)
                 )
                 .scaleEffect(!isPressed ? 1.05 : 0.95)
                 .animation(.easeOut, value: isPressed)
